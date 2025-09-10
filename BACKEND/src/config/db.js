@@ -26,6 +26,11 @@ export const connectDB = async () => {
     return conn;
   } catch (error) {
     console.log("Error connecting to MongoDB:", error);
+    console.log(
+      "MongoDB connection string:",
+      ENV.MONGO_URI?.split("@")[1] || "Connection string not available"
+    ); // Logs part of the connection string without credentials
+    console.log("Current environment:", ENV.NODE_ENV);
 
     // Don't exit the process in a serverless environment
     if (ENV.NODE_ENV === "production") {

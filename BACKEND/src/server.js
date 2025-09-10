@@ -26,6 +26,9 @@ const startServer = async () => {
     }
   } catch (error) {
     console.error("Error starting server:", error);
+    console.error("Server environment:", ENV.NODE_ENV);
+    console.error("Server port:", ENV.PORT);
+
     // Don't exit the process in production/serverless environment
     if (ENV.NODE_ENV !== "production") {
       process.exit(1); // Only exit in development
