@@ -1,20 +1,34 @@
+import "../instrument.mjs";
 import express from "express";
 import { ENV } from "./config/env.js";
 import { connectDB } from "./config/db.js";
 import { clerkMiddleware } from "@clerk/express";
 import { functions, inngest } from "./config/inngest.js";
 import { serve } from "inngest/express";
+import chatRoutes from "./routes/chat.route.js";
+
+import cors from "cors";
+
+import * as Sentry from "@sentry/node";
 
 const app = express();
 
 app.use(express.json());
-app.use(clerkMiddleware()); // req.auth will be available in the request object from clerk
+app.use(cors({ origin: ENV.CLIENT_URL, credentials: true }));
+app.use(clerkMiddleware()); // req.auth will be available in the request object
 
-app.use("/api/inngest", serve({ client: inngest, functions }));
+app.get("/debug-sentry", (req, res) => {
+  throw new Error("My first Sentry error!");
+});
 
 app.get("/", (req, res) => {
   res.send("Hello World! 123");
 });
+
+app.use("/api/inngest", serve({ client: inngest, functions }));
+app.use("/api/chat", chatRoutes);
+
+Sentry.setupExpressErrorHandler(app);
 
 const startServer = async () => {
   try {
@@ -26,14 +40,7 @@ const startServer = async () => {
     }
   } catch (error) {
     console.error("Error starting server:", error);
-    console.error("Server environment:", ENV.NODE_ENV);
-    console.error("Server port:", ENV.PORT);
-
-    // Don't exit the process in production/serverless environment
-    if (ENV.NODE_ENV !== "production") {
-      process.exit(1); // Only exit in development
-    }
-    // In production, we'll just continue and let the request fail if needed
+    process.exit(1); // Exit the process with a failure code
   }
 };
 
