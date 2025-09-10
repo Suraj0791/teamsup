@@ -1,6 +1,7 @@
 import { Inngest } from "inngest";
 import { connectDB } from "./db.js";
-import User from "../models/user.model.js"; // Corrected import syntax
+import { User } from "../models/user.model.js"; // Import the User model
+
 import { ENV } from "./env.js";
 
 // --- 1. Inngest Client Initialization ---
