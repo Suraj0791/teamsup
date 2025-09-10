@@ -32,17 +32,11 @@ const syncUser = inngest.createFunction(
 
     //upsertStreamUser: Adds or updates the user in your chat/stream system (so they can chat).
 
-    await upsertStreamUser({
-      id: newUser.clerkId.toString(),
-      name: newUser.name,
-      image: newUser.image,
-    });
 
 
 
     // addUserToPublicChannels: Automatically adds the new user to public chat channels (so they’re part of the community).
 
-    await addUserToPublicChannels(newUser.clerkId.toString());
 
 //      When a user signs up (event from Clerk), you want to:
 // Save them in your database.
