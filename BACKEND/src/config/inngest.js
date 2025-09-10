@@ -1,7 +1,6 @@
 import { Inngest } from "inngest";
 import { connectDB } from "./db.js";
 import { User } from "../models/user.model.js"; // Import the User model
-import { addUserToPublicChannels, deleteStreamUser, upsertStreamUser } from "./stream.js";
 
 // When a user is created in Clerk, syncUser runs: adds them to your DB and chat system.
 // When a user is deleted in Clerk, deleteUserFromDB runs: removes them from your DB and chat system.
