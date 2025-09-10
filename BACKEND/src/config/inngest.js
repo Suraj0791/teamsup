@@ -27,7 +27,7 @@ const syncUser = inngest.createFunction(
     };
 
     await User.create(newUser);
-
+    console.log("User created in DB:", newUser);
 
     //upsertStreamUser: Adds or updates the user in your chat/stream system (so they can chat).
 
@@ -56,7 +56,7 @@ const deleteUserFromDB = inngest.createFunction(
     const { id } = event.data;
     await User.deleteOne({ clerkId: id });
 
-    await deleteStreamUser(id.toString());
+
   }
 );
 

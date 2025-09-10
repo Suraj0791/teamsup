@@ -26,7 +26,11 @@ const startServer = async () => {
     }
   } catch (error) {
     console.error("Error starting server:", error);
-    process.exit(1); // Exit the process with a failure code
+    // Don't exit the process in production/serverless environment
+    if (ENV.NODE_ENV !== "production") {
+      process.exit(1); // Only exit in development
+    }
+    // In production, we'll just continue and let the request fail if needed
   }
 };
 
