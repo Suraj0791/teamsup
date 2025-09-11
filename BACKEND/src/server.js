@@ -30,17 +30,17 @@ app.use("/api/chat", chatRoutes);
 
 Sentry.setupExpressErrorHandler(app);
 
+const PORT = ENV.PORT || 3000; 
 const startServer = async () => {
   try {
     await connectDB();
-    if (ENV.NODE_ENV !== "production") {
-      app.listen(ENV.PORT, () => {
-        console.log("Server started on port:", ENV.PORT);
-      });
-    }
+    // Always listen for requests in any environment on Render
+    app.listen(PORT, () => {
+      console.log(`Server started successfully on port: ${PORT}`);
+    });
   } catch (error) {
-    console.error("Error starting server:", error);
-    process.exit(1); // Exit the process with a failure code
+    console.error("CRITICAL: Error starting server:", error);
+    process.exit(1); // Exit the process with a failure code if startup fails
   }
 };
 
