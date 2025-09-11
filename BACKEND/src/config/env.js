@@ -1,5 +1,8 @@
 import "dotenv/config";
 
+console.log("[DEBUG] INNGEST_SIGNING_KEY:", process.env.INNGEST_SIGNING_KEY ? "Found" : "Not Found");
+
+
 export const ENV = {
   PORT: process.env.PORT || 3000,
   MONGO_URI: process.env.MONGO_URI,
