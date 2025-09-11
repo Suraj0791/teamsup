@@ -10,7 +10,7 @@ const INNGEST_SIGNING_KEY = "signkey-prod-7809ca11d17a2c3af15e462445a8fbee951554
 
 export const inngest = new Inngest({ 
   id: "slack-clone",
-  signingKey: signingKey 
+  signingKey: INNGEST_SIGNING_KEY 
 });
 
 console.log(`[INNGEST CONFIG] Signing Key Status: ${signingKey ? `Found (starts with: ${signingKey.slice(0, 15)}...)` : "🔴🔴🔴 NOT FOUND 🔴🔴🔴"}`);
