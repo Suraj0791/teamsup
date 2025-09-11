@@ -15,29 +15,29 @@ app.use(express.json());
 app.use(cors({ origin: ENV.CLIENT_URL, credentials: true }));
 app.use(clerkMiddleware());
 
-
-// --- THIS IS THE NEW "SPY" MIDDLEWARE ---
-const spyOnHeaders = (req, res, next) => {
-  console.log("--- INCOMING WEBHOOK HEADERS ---");
-  console.log(JSON.stringify(req.headers, null, 2));
-  console.log("---------------------------------");
-  next();
-};
-// -----------------------------------------
-
-
 app.get("/", (req, res) => {
   res.send("Hello World! 123");
 });
 
-// Apply the spy middleware ONLY to the inngest route
-app.use("/api/inngest", spyOnHeaders, serve({ client: inngest, functions, signingKey: ENV.INNGEST_SIGNING_KEY }));
+// --- THE FINAL FIX IS HERE ---
+// We are now telling the Inngest server to use the 'svix' signature
+// which matches the headers being sent by Clerk.
+app.use(
+  "/api/inngest",
+  serve({
+    client: inngest,
+    functions,
+    signingKey: ENV.INNGEST_SIGNING_KEY,
+    signature: "svix", // <-- ADD THIS LINE
+  })
+);
+// -----------------------------
 
 app.use("/api/chat", chatRoutes);
 
 Sentry.setupExpressErrorHandler(app);
 
-const PORT = ENV.PORT || 3000;
+const PORT = ENV.PORT || 5001;
 
 const startServer = async () => {
   try {
