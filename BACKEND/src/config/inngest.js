@@ -5,11 +5,15 @@ import { addUserToPublicChannels, deleteStreamUser, upsertStreamUser } from "./s
 import { ENV } from "./env.js"; // Import the ENV object
 
 // Create a client to send and receive events, explicitly providing the signing key
+// Directly read from the environment, bypassing the ENV object for this one key.
+const signingKey = process.env.INNGEST_SIGNING_KEY;
+
 export const inngest = new Inngest({ 
   id: "slack-clone",
-  signingKey: ENV.INNGEST_SIGNING_KEY // This line forces the SDK to use your key
+  signingKey: signingKey 
 });
 
+console.log(`[INNGEST CONFIG] Signing Key Status: ${signingKey ? `Found (starts with: ${signingKey.slice(0, 15)}...)` : "🔴🔴🔴 NOT FOUND 🔴🔴🔴"}`);
 /**
  * This function is triggered when a 'user.created' event is received from Clerk.
  * It syncs the new user's data to your MongoDB and your Stream chat service.
