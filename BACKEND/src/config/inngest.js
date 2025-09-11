@@ -6,7 +6,7 @@ import { ENV } from "./env.js"; // Import the ENV object
 
 // Create a client to send and receive events, explicitly providing the signing key
 // Directly read from the environment, bypassing the ENV object for this one key.
-const signingKey = process.env.INNGEST_SIGNING_KEY;
+const INNGEST_SIGNING_KEY = "signkey-prod-7809ca11d17a2c3af15e462445a8fbee9515544de532f17591620cfcbf2c9352";
 
 export const inngest = new Inngest({ 
   id: "slack-clone",
