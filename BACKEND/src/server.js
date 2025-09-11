@@ -9,34 +9,36 @@ import chatRoutes from "./routes/chat.route.js";
 import cors from "cors";
 import * as Sentry from "@sentry/node";
 
-// --- NEW, MORE POWERFUL DEBUG LOG ---
-const key = process.env.INNGEST_SIGNING_KEY;
-console.log(`[SERVER DEBUG] Inngest Signing Key Status: ${key ? `Found (starts with: ${key.slice(0, 15)}...)` : "🔴🔴🔴 NOT FOUND 🔴🔴🔴"}`);
-// ------------------------------------
-
 const app = express();
-// ... (rest of the file is the same)
+
 app.use(express.json());
 app.use(cors({ origin: ENV.CLIENT_URL, credentials: true }));
 app.use(clerkMiddleware());
+
+
+// --- THIS IS THE NEW "SPY" MIDDLEWARE ---
+const spyOnHeaders = (req, res, next) => {
+  console.log("--- INCOMING WEBHOOK HEADERS ---");
+  console.log(JSON.stringify(req.headers, null, 2));
+  console.log("---------------------------------");
+  next();
+};
+// -----------------------------------------
+
 
 app.get("/", (req, res) => {
   res.send("Hello World! 123");
 });
 
-app.use(
-  "/api/inngest",
-  serve({
-    client: inngest,
-    functions,
-    signingKey: process.env.INNGEST_SIGNING_KEY, // Also read directly here
-  })
-);
+// Apply the spy middleware ONLY to the inngest route
+app.use("/api/inngest", spyOnHeaders, serve({ client: inngest, functions, signingKey: ENV.INNGEST_SIGNING_KEY }));
+
 app.use("/api/chat", chatRoutes);
 
 Sentry.setupExpressErrorHandler(app);
 
 const PORT = ENV.PORT || 3000;
+
 const startServer = async () => {
   try {
     await connectDB();
@@ -48,5 +50,7 @@ const startServer = async () => {
     process.exit(1);
   }
 };
+
 startServer();
+
 export default app;
