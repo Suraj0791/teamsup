@@ -25,6 +25,16 @@ app.get("/", (req, res) => {
   res.send("Hello World! 123");
 });
 
+
+app.use("/api/inngest", (req, res, next) => {
+  console.log("--- INNGEST INCOMING REQUEST ---");
+  console.log("METHOD:", req.method);
+  console.log("HEADERS:", JSON.stringify(req.headers, null, 2));
+  console.log("--- END OF REQUEST DETAILS ---");
+  next(); // Pass control to the next handler (the Inngest serve function)
+});
+
+
 app.use(
   "/api/inngest",
   serve({
