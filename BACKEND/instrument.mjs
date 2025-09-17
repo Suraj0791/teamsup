@@ -1,11 +1,11 @@
 import * as Sentry from "@sentry/node";
-import { ENV } from "./src/config/env.js";
+import "dotenv/config";
 
 Sentry.init({
-  dsn: ENV.SENTRY_DSN,
+  dsn: process.env.SENTRY_DSN,
   tracesSampleRate: 1.0,
   profilesSampleRate: 1.0,
-  environment: ENV.NODE_ENV || "development",
+  environment: process.env.NODE_ENV || "development",
   includeLocalVariables: true,
 
   // Setting this option to true will send default PII data to Sentry.

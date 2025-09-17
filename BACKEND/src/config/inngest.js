@@ -6,14 +6,22 @@ import { ENV } from "./env.js"; // Import the ENV object
 
 // Create a client to send and receive events, explicitly providing the signing key
 // Directly read from the environment, bypassing the ENV object for this one key.
-const INNGEST_SIGNING_KEY = "signkey-prod-7809ca11d17a2c3af15e462445a8fbee9515544de532f17591620cfcbf2c9352";
+// const INNGEST_SIGNING_KEY = "signkey-prod-7809ca11d17a2c3af15e462445a8fbee9515544de532f17591620cfcbf2c9352";
 
+// export const inngest = new Inngest({ 
+//   id: "slack-clone",
+//   signingKey: INNGEST_SIGNING_KEY 
+// });
+
+
+// Use the signing key from your environment variables
 export const inngest = new Inngest({ 
   id: "slack-clone",
-  signingKey: INNGEST_SIGNING_KEY 
+  signingKey: ENV.INNGEST_SIGNING_KEY 
 });
 
-console.log(`[INNGEST CONFIG] Signing Key Status: ${signingKey ? `Found (starts with: ${signingKey.slice(0, 15)}...)` : "🔴🔴🔴 NOT FOUND 🔴🔴🔴"}`);
+console.log(`[INNGEST CONFIG] Signing Key Status: ${ENV.INNGEST_SIGNING_KEY ? `Found (starts with: ${ENV.INNGEST_SIGNING_KEY.slice(0, 15)}...)` : "NOT FOUND"}`);
+
 /**
  * This function is triggered when a 'user.created' event is received from Clerk.
  * It syncs the new user's data to your MongoDB and your Stream chat service.

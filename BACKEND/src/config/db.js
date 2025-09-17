@@ -10,7 +10,14 @@ export const connectDB = async () => {
     return cachedConnection;
   }
 
+  if (!ENV.MONGO_URI) {
+    console.log("[DB] MONGO_URI not found in environment variables");
+    console.log("[DB] Using in-memory MongoDB or skipping connection");
+    return null;
+  }
+
   try {
+    console.log(`[DB] Connecting to MongoDB: ${ENV.MONGO_URI.slice(0, 15)}...`);
     const conn = await mongoose.connect(ENV.MONGO_URI, {
       // These options make the connection more reliable for serverless environments
       serverSelectionTimeoutMS: 5000,
